@@ -1,15 +1,25 @@
 {
-  "name": "note-taker",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1",
-    "mysql": "^2.16.0"
-  }
+	"name": "note-taker",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.js",
+	"scripts": {
+		"test": "concurrently \"npm run watch\" \"jest --watchAll\"",
+		"start": "node server.js",
+		"watch": "nodemon server.js"
+	},
+	"jest": {
+		"testURL": "http://localhost:8000"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.17.1",
+		"uuid": "^8.0.0"
+	},
+	"devDependencies": {
+		"axios": "^0.19.2",
+		"concurrently": "^5.2.0",
+		"jest": "^25.5.2"
+	}
 }

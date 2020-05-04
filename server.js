@@ -1,62 +1,22 @@
+// Dependencies
 const express = require("express");
-const path = require("path");
-const fs = require("fs");
+const htmlRoutes = require("./routes/htmlRoutes");
+const apiRoutes = require("./routes/apiRoutes");
 
+// Express app
 const app = express();
-const port = 8080;
-const mainDir = path.join(__dirname, "/public");
+const PORT = process.env.PORT || 8000;
 
-app.use(express.static('public'));
-app.use(express.urlencoded({extended: true}));
+// data parsing
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static("public"));
 
-app.get("/notes", function(req, res) {
-    res.sendFile(path.join(mainDir, "notes.html"));
+// Routes
+app.use("/api", apiRoutes);
+app.use("/", htmlRoutes);
+
+// Start server to begin listening
+app.listen(PORT, function () {
+	console.log(`Listening on PORT ${PORT}`);
 });
-
-app.get("/api/notes", function(req, res) {
-    res.sendFile(path.join(__dirname, "/db/db.json"));
-});
-
-app.get("/api/notes/:id", function(req, res) {
-    let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-    res.json(savedNotes[Number(req.params.id)]);
-});
-
-app.get("*", function(req, res) {
-    res.sendFile(path.join(mainDir, "index.html"));
-});
-
-app.post("/api/notes", function(req, res) {
-    let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-    let newNote = req.body;
-    let uniqueID = (savedNotes.length).toString();
-    newNote.id = uniqueID;
-    savedNotes.push(newNote);
-
-    fs.writeFileSync("./db/db.json", JSON.stringify(savedNotes));
-    console.log("Note saved to db.json. Content: ", newNote);
-    res.json(savedNotes);
-})
-
-app.delete("/api/notes/:id", function(req, res) {
-    let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-    let noteID = req.params.id;
-    let newID = 0;
-    console.log(`Deleting note with ID ${noteID}`);
-    savedNotes = savedNotes.filter(currNote => {
-        return currNote.id != noteID;
-    })
-    
-    for (currNote of savedNotes) {
-        currNote.id = newID.toString();
-        newID++;
-    }
-
-    fs.writeFileSync("./db/db.json", JSON.stringify(savedNotes));
-    res.json(savedNotes);
-})
-
-app.listen(port, function() {
-    console.log(`Now listening to port ${port}. Enjoy your stay!`);
-})

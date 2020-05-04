@@ -1,10 +1,3 @@
-# Express Note Taker
-Note taking application designed to write, save, and delete notes, written to and retrieved from a backend JSON file
+# note-taker
 
-## Example Usage
-check on the Gify video
-
-
-## Approach
-
-Use like a regular note tacker
+node server then deployed this link https\\:LOCALHOT:8080;
